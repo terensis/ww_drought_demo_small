@@ -9,7 +9,7 @@ def prepare_data(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     gdf = gdf.to_crs(epsg=4326)
     gdf = gdf[gdf['trait_name'] == 'Grain Yield [t/ha]']
     gdf = gdf.rename(columns={'trait_value': 'Grain Yield [t/ha]'})
-    gdf['Grain Yield [t/ha]'] = gdf['Grain Yield [t/ha]'].clip(1, 10).round(2)
+    gdf['Grain Yield [t/ha]'] = gdf['Grain Yield [t/ha]'].clip(2, 9).round(2)
     return gdf
 
 
@@ -30,8 +30,10 @@ pane2 = folium.map.CustomPane('2022', z_index=625)
 m.m2.get_root().add_child(pane2)
 
 # on the left, we dislay the 2019 data from the cool, wet year
-gdf = gpd.read_file("Region_PoC/GIS/leaflet_compare/data/grain_yield_2019.geojson")
+gdf = gpd.read_file("data/grain_yield_2019.geojson")
 gdf = prepare_data(gdf)
+
+fill_color = 'Spectral'
 
 # display the grain yield as colorphlet on the map
 yield2019 = folium.Choropleth(
@@ -39,7 +41,7 @@ yield2019 = folium.Choropleth(
     data=gdf,
     columns=['_uid0_', 'Grain Yield [t/ha]'],
     key_on='feature.properties._uid0_',
-    fill_color='viridis',
+    fill_color=fill_color,
     fill_opacity=0.9,
     line_opacity=0.2,
     legend_name='Grain Yield [t/ha]'
@@ -52,7 +54,7 @@ folium.GeoJsonTooltip(['Grain Yield [t/ha]']).add_to(
 m.m1.add_child(yield2019)
 
 # on the right, we display the 2022 data from the hot, dry year
-gdf = gpd.read_file("Region_PoC/GIS/leaflet_compare/data/grain_yield_2022.geojson")
+gdf = gpd.read_file("data/grain_yield_2022.geojson")
 gdf = prepare_data(gdf)
 
 # display the grain yield as colorphlet on the map
@@ -61,7 +63,7 @@ yield2022 = folium.Choropleth(
     data=gdf,
     columns=['_uid0_', 'Grain Yield [t/ha]'],
     key_on='feature.properties._uid0_',
-    fill_color='viridis',
+    fill_color=fill_color,
     fill_opacity=0.9,
     line_opacity=0.2,
     legend_name='Grain Yield [t/ha]'
@@ -79,7 +81,7 @@ for key in yield2022._children:
 
 m.m2.add_child(yield2022)
 
-fpath = "Region_PoC/GIS/leaflet_compare/index.html"
+fpath = "index.html"
 m.save(fpath)
 
 # open the HTML file and add the title box
