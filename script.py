@@ -16,7 +16,7 @@ def prepare_data(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
 m = DualMap(
     location=(46.16, 6.02),
     zoom_start=15,
-    attr='© Terensis (2024). Basemap data © CartoDB'
+    attr='© Terensis GmbH (2024). Basemap data © CartoDB'
 )
 
 folium.TileLayer("cartodbpositron").add_to(m.m1)
@@ -81,6 +81,7 @@ for key in yield2022._children:
 
 m.m2.add_child(yield2022)
 
+
 fpath = "index.html"
 m.save(fpath)
 
@@ -90,8 +91,8 @@ with open(fpath, 'a') as f:
     <style>
         .title {
             position: fixed;
-            top: 20px;
-            left: 150px;
+            bottom: 40px;
+            left: 280px;
             background-color: white;
             padding: 5px;
             border-radius: 5px;
